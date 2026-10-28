@@ -1,0 +1,7 @@
+family,mean,std,count
+cuprate,0.004,7.671,10532
+elemental,0.009,4.084,285
+heusler_ternary,-0.023,2.136,3297
+iron_pnictide,0.034,4.593,1112
+mgb2_binary,0.1,8.21,55
+other,-0.002,3.053,5982

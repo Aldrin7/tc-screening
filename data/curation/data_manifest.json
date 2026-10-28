@@ -1,0 +1,43 @@
+{
+  "generated_on": "2026-10-26",
+  "project": "Tc screening (Materials Futures paper)",
+  "canonical_origin": {
+    "database": "NIMS SuperCon",
+    "url": "http://supercon.nims.go.jp/index_en.html",
+    "derived_by": "Hamidieh, K. A data-driven statistical model for predicting the critical temperature of a superconductor. Comput. Mater. Sci. 154, 346-354 (2018). DOI 10.1016/j.commatsci.2018.07.052"
+  },
+  "mirrors": [
+    {
+      "source": "kaggle",
+      "url": "https://www.kaggle.com/datasets/tunguz/superconductivty-data-data-set",
+      "doi": "none listed (Kaggle dataset page; verify licence at Gate A)",
+      "access_date": "2026-10-26",
+      "files": {
+        "train.csv": {
+          "size_bytes": 23859780,
+          "sha256": "4dfb6e3a1f6ffd969e5a5e42f093c4800d1e2a6c8b1e309f8fcd9f23d86952f3"
+        },
+        "unique_m.csv": {
+          "size_bytes": 4291603,
+          "sha256": "b68ae6b55ea8581eff8b1ffba073a899db7e2d2f7f3b781bb0802f643f51e5f7"
+        }
+      }
+    },
+    {
+      "source": "uci",
+      "url": "https://archive.ics.uci.edu/static/public/464/superconductivty+data.zip",
+      "doi": "10.24432/C53P47",
+      "access_date": "2026-10-26",
+      "files": {
+        "train.csv": {
+          "size_bytes": 23859780,
+          "sha256": "4dfb6e3a1f6ffd969e5a5e42f093c4800d1e2a6c8b1e309f8fcd9f23d86952f3"
+        },
+        "unique_m.csv": {
+          "size_bytes": 4291603,
+          "sha256": "b68ae6b55ea8581eff8b1ffba073a899db7e2d2f7f3b781bb0802f643f51e5f7"
+        }
+      }
+    }
+  ]
+}

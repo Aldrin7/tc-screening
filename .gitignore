@@ -1,0 +1,33 @@
+# secrets and credentials never leave this folder tree
+.env
+*.env
+*Kaggle.txt
+*Zenodo token.txt
+*git token.txt
+*token*
+.kaggle/
+
+# data of provenance-sensitive size; archived via Zenodo DOI instead
+data/raw/
+data/curation/*.parquet
+
+# model artifacts & logs
+checkpoints/
+future_scope/*.pkl
+future_scope/*.onnx
+results/logs/*.log
+# results/tables/*_predictions.csv
+results/tables/*_predictions.parquet
+results/zenodo_bundle/
+
+# python/git cruft
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+*.egg-info/
+.venv/
+.primal/
+catboost_info/
+
+# manuscript workspace (submitted separately; not part of the code release)
+docs/

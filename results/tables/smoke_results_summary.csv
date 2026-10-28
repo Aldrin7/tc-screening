@@ -1,0 +1,5 @@
+,,rmse_K,rmse_K,rmse_K,mae_K,mae_K,mae_K,r2,r2,r2,coverage_90,coverage_90,coverage_90,interval_width_mean,interval_width_mean,interval_width_mean
+,,mean,std,count,mean,std,count,mean,std,count,mean,std,count,mean,std,count
+regime,model,,,,,,,,,,,,,,,
+formula_grouped,dummy_mean,34.2545,0.602,3,29.3159,0.5379,3,-0.0008,0.0007,3,0.904,0.0164,3,110.2256,0.8211,3
+formula_grouped,ridge,23.5141,6.157,3,12.7742,0.1544,3,0.5051,0.2554,3,0.8975,0.0062,3,54.7674,0.4267,3

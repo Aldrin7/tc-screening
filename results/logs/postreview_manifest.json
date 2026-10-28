@@ -1,0 +1,29 @@
+{
+  "purpose": "post-review supplementary analyses",
+  "started": "2026-10-27 12:33:24",
+  "python": "3.11.8",
+  "platform": "Windows-10-10.0.26300-SP0",
+  "packages": {
+    "numpy": "2.4.6",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.0",
+    "lightgbm": "4.6.0"
+  },
+  "n_fits_planned": 55,
+  "model": "lightgbm",
+  "norm_ablation_fits": 100,
+  "tc_bin_knots_K": [
+    5.0,
+    20.0,
+    50.0
+  ],
+  "elem_count_bin_edges": [
+    3,
+    4,
+    5
+  ],
+  "min_bin_calibration_rows": 50,
+  "note": "split + calibration-mask logic identical to main run (splits.iter_regime, rng(seed+fold) < 0.25); Mondrian grouping by family is impossible in leave-one-family-out (no calibration points for the held-out family), hence deployable binned groupings",
+  "ended": "2026-10-27 12:46:37",
+  "wall_seconds": 794.9
+}

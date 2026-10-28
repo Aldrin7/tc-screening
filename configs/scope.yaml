@@ -1,0 +1,96 @@
+# ============================================================
+# DECLARED SCOPE (Gate C) - fixed BEFORE any training run.
+# Any deviation from this file must be logged as a scope change
+# (Rule 3) and re-declared. Seeds and fold counts are frozen.
+# ============================================================
+project: tc_screening
+random_seed_base: 20260101
+
+data:
+  train_csv: data/raw/supercon_kaggle/train.csv        # 81 features + critical_temp
+  unique_m_csv: data/raw/supercon_kaggle/unique_m.csv  # 86 element fractions + formula + critical_temp
+  n_rows_expected: 21263
+  target: critical_temp
+  units: K
+
+curation:
+  drop_rows: none                 # no outlier removal; duplicates retained (reported)
+  missing_values: none_present    # verified at Gate A
+  scaling: standardize_fit_on_train_fold_only
+  supplementary_dedup: mean_tc_per_formula   # sensitivity analysis only, labeled
+
+split_regimes:
+  iid_random:
+    method: KFold
+    n_folds: 5
+    note: standard literature-practice random split (optimistic baseline regime)
+  formula_grouped:
+    method: GroupKFold_shuffle
+    n_folds: 5
+    group: formula                # duplicated formulas never straddle train/test
+    note: near-duplicate/leakage-controlled regime
+  family_blocked:
+    method: leave_one_family_out
+    note: rule-based family sieves (zero_elemental/single element; heusler_ternary;
+          cuprate_cu_o; iron_pnictide_fe_111; mgb2_binary; other). Test = whole family
+          absent from training (hardest regime; noisy on small families, per-fold n reported)
+  element_leaveout:
+    method: element_block_cv
+    n_blocks: 5                    # rows containing >=1 of the blocked elements form the test fold
+    note: true compositional extrapolation to unseen elements; blocked elements sampled from
+          elements present in >= n_min_rows (100) rows, 5 seeds = 5 distinct blocks
+
+models:
+  dummy_mean:      {class: DummyRegressor,      params: {strategy: mean}}
+  ridge:           {class: Ridge,               params: {alpha: 10.0}, needs_scaling: true}
+  random_forest:   {class: RandomForestRegressor, params: {n_estimators: 300, n_jobs: -1}}
+  xgboost:         {class: XGBRegressor,         params: {n_estimators: 500, learning_rate: 0.05, max_depth: 8, subsample: 0.8, colsample_bytree: 0.8, objective: reg:squarederror, n_jobs: -1}}
+  lightgbm:        {class: LGBMRegressor,        params: {n_estimators: 500, learning_rate: 0.05, max_depth: -1, num_leaves: 64, subsample: 0.8, colsample_bytree: 0.8, n_jobs: -1, verbose: -1}}
+  catboost:        {class: CatBoostRegressor,    params: {iterations: 500, learning_rate: 0.05, depth: 8, loss_function: RMSE, verbose: 0, thread_count: -1}}
+
+seeds_folds:
+  seeds: 5
+  folds_per_seed: 5
+  total_fits_per_regime_allowed: 150    # 6 models x 5 seeds x 5 folds
+  note: family_blocked uses leave-one-family-out (6 folds) x 5 seeds
+  note2: element_leaveout uses 5 element blocks x 5 seeds with block membership seeded
+
+metrics:
+  primary: rmse_K
+  secondary: [mae_K, r2]
+  significance: paired t-test across fold-paired errors, primary model vs baselines,
+                Holm-Bonferroni correction (reported only when actually computed)
+
+hyperparameter_search:
+  primary_models: [lightgbm, catboost]
+  method: random search, 10 configs, 5-fold CV inside the iid regime, seed 0
+  budget_note: bounded by design (audit focus), flagged in the paper
+
+ablations:
+  feature_sets:
+    stat_only: 81 statistical descriptors
+    elem_only: 86 element fractions
+    stat_plus_elem: 167 combined features
+  removal: drop top-5 / top-10 SHAP-ranked features of the full set
+  scope: lightgbm + ridge on iid_random and formula_grouped regimes only
+
+uncertainty:
+  conformal: split-conformal, calibration = 25% of each training fold,
+             intervals for 90% coverage, measured coverage + interval width per regime
+
+explainability:
+  method: SHAP TreeExplainer on the final full-data lightgbm fit per seed
+  stability: rank correlation (Kendall tau or Spearman) of top-15 feature attributions across seeds
+
+scenario_probes:
+  type: stylized sensitivity probes (bounded by historical feature range, not projections)
+  targets: [mean_atomic_mass, mean_Density, wtd_range_atomic_mass]   # verify exact column names in code
+  perturbations_percent: [-10, 10]
+
+compute:
+  environment: local CPU (Windows, Python 3.11.8); Kaggle notebooks available if throttled
+  expected_wallclock: not yet measured (measured during Gate C)
+
+logging:
+  sample_flow: log counts at every preprocessing step to results/logs/
+  run_manifest: configs + versions + seeds + hashes + start/end times (results/logs/run_manifest.json)
