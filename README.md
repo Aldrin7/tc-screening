@@ -64,7 +64,7 @@ redistributed here; `data/curation/data_manifest.json` records the provenance an
 verification of the two ingested mirrors.
 
 All result tables, the 3.79 M-row out-of-fold prediction table and the run
-manifests are archived on Zenodo: https://doi.org/10.5281/zenodo.23686973
+manifests are archived on Zenodo: https://doi.org/10.5281/zenodo.23721349
 
 ## Licence
 

@@ -38,9 +38,9 @@ DESC = (
     'RMSE/MAE/R<sup>2</sup>, split-conformal 90% coverage and widths), Holm-corrected paired '
     'significance tests, feature-set and top-k ablations, deduplication sensitivity, SHAP '
     'attributions and stability, stylized perturbation probes, residuals, 3,786,600 out-of-fold '
-    'prediction rows, post-review analyses (family census, test-size-weighted means, Mondrian '
+    'prediction rows, supplementary analyses (family census, test-size-weighted means, Mondrian '
     'conformal, instance-distance diagnostic, normalization ablation), run manifests with package '
-    'versions and scope SHA-256, paper figures (vector PDF + PNG), and a code snapshot (MIT licence).</p>'
+    'versions and scope SHA-256, figures (vector PDF + PNG), and the complete code (MIT licence).</p>'
     '<p>Source data: SuperCon database (NIMS) as distributed by Hamidieh (2018) via the UCI '
     'Machine Learning Repository, DOI 10.24432/C53P47 (CC BY 4.0) - not redistributed here.</p>'
 )
@@ -296,11 +296,13 @@ def main() -> int:
 
     publish_url = draft['links'].get('publish') or f'{self_url}/actions/publish'
     code, pub = call('POST', publish_url, token)
-    if code not in (200, 201):
+    if code not in (200, 201, 202):    # 202 = accepted; publication completes asynchronously
         print(f'publish failed (HTTP {code})', file=sys.stderr)
         return 1
-    print(f'PUBLISHED. DOI: {pub.get("doi")}')
-    print(f'Record: {pub.get("links", {}).get("self_html")}')
+    recid = (pub or {}).get('id') or draft['id']
+    doi = (pub or {}).get('doi') or f'10.5281/zenodo.{recid}'
+    print(f'PUBLISHED (HTTP {code}). DOI: {doi}')
+    print(f'Record: https://zenodo.org/records/{recid}')
     print('Fill this DOI into docs/manuscript.md (Data availability) and docs/cover_letter.md.')
     return 0
 
